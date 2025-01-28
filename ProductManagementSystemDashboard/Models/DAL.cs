@@ -33,7 +33,7 @@ namespace ProductManagementSystemDashboard.Models
         }
 
         //Method to get a product by id
-        public Products GetProducts(int id)
+        public Products GetProductById(int id)
         {
             Products products = null;
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -116,6 +116,22 @@ namespace ProductManagementSystemDashboard.Models
                     command.Parameters.AddWithValue("@City", product.City);
                     command.Parameters.AddWithValue("@ProductionDocument", product.ProductionDocument);
                     command.Parameters.AddWithValue("@CreatedOn", product.CreatedOn);
+                    connection.Open();
+                    int i = command.ExecuteNonQuery();
+                    return i >= 1;
+                }
+            }
+        }
+
+        //Method to delete a product
+        public bool DeleteProduct(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("sp_DeleteProduct", connection))
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Id", id);
                     connection.Open();
                     int i = command.ExecuteNonQuery();
                     return i >= 1;
