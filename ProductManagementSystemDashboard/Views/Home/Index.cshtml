@@ -64,12 +64,67 @@
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 </form>
             </div>
         </div>
     </div>
 
+	<!--Delete Product Modal-->
+	<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteModalLabel">Delete Product</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+                    <p>Are you sure you want to delete this product?</p>
+                </div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+					<button type="button" class="btn btn-danger" onclick="DeleteProduct()">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!--Success/Error Notification-->
+    <div id="notification" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+
+    @section Scripts {
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            //Dummy data for countries, states and cities
+            const countries = {
+                "USA" : ["California", "Texas"],
+				"India" : ["Maharashtra", "Karnataka"],
+				"UK" : ["London", "Manchester"],
+				"Canada" : ["Ontario", "Quebec"]
+            };
+
+            const cities = {
+				"California" : ["Los Angeles", "San Francisco"],
+                "Texas" : ["Houston", "Austin"],
+				"Maharashtra" : ["Mumbai", "Pune"],
+				"Karnataka" : ["Bangalore", "Mysore"],
+                "London" : ["Westminster", "Camden"],
+				"Manchester" : ["Salford", "Bolton"],
+				"Ontario" : ["Toronto", "Ottawa"],
+				"Quebec" : ["Montreal", "Quebec City"]
+            };
+
+            //Populate Country Dropdown
+            $(document).ready(() =>{
+				loadCountries();
+				loadProducts();
+            });
+			function loadCountries(){
+				let countrySelect = $("#country");
+				countrySelect.empty();
+
+        </script>
+
+	}
 </div>
