@@ -123,6 +123,123 @@
 			function loadCountries(){
 				let countrySelect = $("#country");
 				countrySelect.empty();
+                countrySelect.append('<option value="">Select Country</option>');
+				for (const country in countries) {
+					countrySelect.append(`<option value="${country}">${country}</option>`);
+				}
+			}
+
+			function loadStates(){
+				let country = $("#country").val();
+				let stateSelect = $("#state");
+				stateSelect.empty();
+				stateSelect.append('<option value="">Select State</option>');
+				if (countries[country]) {
+					countries[country].forEach(state => {
+						stateSelect.append(`<option value="${state}">${state}</option>`);
+					});
+				}
+				loadCities(); //Reset cities when changing country
+			}
+
+			function loadCities(selectedCity = ""){
+				let state = $("#state").val();
+				let citySelect = $("#city");
+				citySelect.empty();
+				citySelect.append('<option value="">Select City</option>');
+				if (cities[state]) {
+					cities[state].forEach(city => {
+                        citySelect.append(`<option value="${city}" ${city === selectedCity ? 'selected' : ''}>${city}</option>`);
+						});
+				}
+			}
+
+            function openEditModal(productId){
+                //AJAX call to fetch the product details by Id
+				$.ajax({
+					url: `/api/product/${productId}`,
+					type: "GET",
+					success: function(product){
+						$("#productId").val(product.id);
+						$("#productName").val(product.name);
+                        $("#address").val(product.address);
+                        $("#country").val(product.country);
+                        loadStates();
+						$("#state").val(data.state);
+						loadCities(data.city);
+						$("#city").val(data.city);
+
+						$("#productionDocument").val('');
+
+						$("#productModal").modal("show");
+					},
+					error: function(){
+						showNotification("Error fetching product details", "danger");
+					}
+				});
+            }
+
+			function openAddModal(){
+                $('#productForm').trigger("reset");
+				$('#productId').val('');
+				$('#productModalLabel').text('Add Product');
+				$('#saveProductBtn').text('Save');
+				$('#productModal').modal('show');
+			}
+
+            //Function to show success/error notifications
+			function showNotification(message, type){
+                let notification = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+				${message}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
+				$('#notification').html(notification);
+			}
+
+			function loadProducts(){
+				$.ajax({
+					url: '/api/product',
+                    type: 'GET',
+					success: function(products){
+						let productTableBody = $('#productTableBody');
+						productTableBody.empty();
+						products.forEach(product => {
+							productTableBody.append(`<tr>
+								<td>${product.name}</td>
+								<td>${product.address}</td>
+								<td>${product.country}</td>
+								<td>${product.state}</td>
+								<td>${product.city}</td>
+								<td>${product.productionDocument}</td>
+								<td>
+									<button class="btn btn-primary" onclick="openEditModal(${product.id})">Edit</button>
+									<button class="btn btn-danger" onclick="confirmDelete(${product.id})">Delete</button>
+								</td>
+							</tr>`);
+						});
+					},
+					error: function(){
+						showNotification("Error fetching products", "danger");
+					}
+				});
+			}
+
+			function confirmDelete(productId){
+				$('#confirmDeleteBtn').off('click').on('click', function(){
+					//AJAX call to delete product
+					$.ajax({
+						url: `/api/product/${productId}`,
+						type: 'DELETE',
+						success: function(){
+							showNotification("Product deleted successfully", "success");
+							loadProducts();
+						},
+						error: function(){
+							showNotification("Error deleting product", "danger");
+						}
+					});
+				})
+			}
 
         </script>
 
